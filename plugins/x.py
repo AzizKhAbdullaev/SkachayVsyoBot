@@ -145,7 +145,7 @@ class X:
             try:
                 upload_message = await event.reply("Uploading Media ... Please hold on.")
                 await client.send_file(event.chat_id, media_url,
-                                       caption="Thank you for using - @Spotify_YT_Downloader_Bot")
+                                       caption="Thank you for using - our bot")
                 await upload_message.delete()
             except Exception as e:
                 print(f"Error sending file: {e}")

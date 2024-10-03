@@ -6,60 +6,61 @@ from telethon.errors.rpcerrorlist import MessageNotModifiedError
 
 class BotMessageHandler:
     start_message = """
-Welcome to your **Music Downloader!** 🎧
+Добро пожаловать в **Music Downloader!** 🎧
 
-Send me the name of a song or artist, and I'll find and send you the downloadable track. 🎶
+Отправьте мне название песни или исполнителя, и я найду и отправлю вам загружаемый трек. 🎶
 
-To see what I can do, type: /help
-Or simply click the Instructions button below. 👇
+Чтобы увидеть, что я могу, введите: /help
+Или просто нажмите кнопку Инструкции ниже.. 👇
 """
 
     instruction_message = """
-🎧 Music Downloader 🎧
+🎧 Бот загрузки музыки 🎧
 
-1. Share Spotify/YouTube song link 🔗
-2. Wait for download confirmation 📣
-3. Receive song file 💾
-4. Or send voice message with song sample 
-   for best match and details 🎤🔍📩
-5. Ask for lyrics, artist info, etc. 📜👨‍🎤
+1. Поделитесь ссылкой на песню из Spotify/YouTube 🔗
+2. Подождите подтверждения загрузки 📣
+3. Получите файл песни 💾
+4. Или отправьте голосовое сообщение с образцом песни 
+   для лучшего совпадения и деталей 🎤🔍📩
+5. Попросите тексты, информацию об исполнителе и т.д. 📜👨‍🎤
 
-💡 Tip: Search by title, lyrics, or other details!
+💡 Совет: Ищите по названию, тексту или другим деталям!
 
-📺 YouTube Downloader 📺
+📺 Загрузчик YouTube 📺
 
-1. Send YouTube video link 🔗
-2. Choose video quality (if prompted) 🎥
-3. Wait for download ⏳
-4. Receive video file 📤
+1. Отправьте ссылку на видео YouTube 🔗
+2. Выберите качество видео (если будет предложено) 🎥
+3. Подождите загрузки ⏳
+4. Получите файл видео 📤
 
-📸 Instagram Downloader 📸
+📸 Загрузчик Instagram 📸
 
-1. Send Instagram post/Reel/IGTV link 🔗
-2. Wait for download ⏳
-3. Receive file 📤
+1. Отправьте ссылку на пост/Reel/IGTV в Instagram 🔗
+2. Подождите загрузки ⏳
+3. Получите файл 📤
 
 🐦 TweetCapture 🐦
 
-1. Provide tweet link 🔗
-2. Wait for screenshot 📸
-3. Receive screenshot 🖼️
-4. For media content, use "Download Media" 
-   button after getting screenshot 📥
+1. Укажите ссылку на твит 🔗
+2. Подождите скриншот 📸
+3. Получите скриншот 🖼️
+4. Для медиа-контента используйте кнопку "Скачать медиа" 
+   после получения скриншота 📥
 
-Questions? Ask @adibnikjou
+
+Для любых вопросов или предложений свяжитесь с @azizkhabdullaev
         """
 
     search_result_message = """🎵 The following are the top search results that correspond to your query:
 """
 
-    core_selection_message = """🎵 Choose Your Preferred Download Core 🎵
+    core_selection_message = """🎵 Выберите предпочитаемый способ загрузки 🎵
 
 """
-    JOIN_CHANNEL_MESSAGE = """It seems you are not a member of our channel yet.
-Please join to continue."""
+    JOIN_CHANNEL_MESSAGE = """Похоже, вы еще не являетесь участником нашего канала. Пожалуйста, присоединитесь, чтобы продолжить."""
 
-    search_playlist_message = """The playlist contains these songs:"""
+    search_playlist_message = """В плейлисте содержатся следующие песни:
+:"""
 
     @staticmethod
     async def send_message(event, text, buttons=None):

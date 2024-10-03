@@ -359,31 +359,20 @@ class SpotifyDownloader:
         icon_path = await SpotifyDownloader.download_icon(link_info)
 
         SpotifyInfoButtons = [
-            [Button.inline("Download 30s Preview",
-                           data=f"spotify/dl/30s_preview/{link_info['preview_url'].split('?cid')[0].replace('https://p.scdn.co/mp3-preview/', '')}")
-             if link_info['preview_url'] is not None else Button.inline("Download 30s Preview",
-                                                                        data=b"unavailable_feature")],
             [Button.inline("Download Track", data=f"spotify/dl/music/{link_info['track_id']}")],
-            [Button.inline("Download Icon",
-                           data=f"spotify/dl/icon/{link_info['image_url'].replace('https://i.scdn.co/image/', '')}")],
             [Button.inline("Artist Info", data=f"spotify/artist/{link_info['track_id']}")],
             [Button.inline("Lyrics", data=f"spotify/lyrics/{link_info['track_id']}")],
-            [Button.url("Listen On Spotify", url=link_info["track_url"]),
-             Button.url("Listen On Youtube", url=link_info['youtube_link']) if link_info[
+            [Button.url("Listen On Youtube", url=link_info['youtube_link']) if link_info[
                  'youtube_link'] else Button.inline("Listen On Youtube", data=b"unavailable_feature")],
             [Button.inline("Cancel", data=b"cancel")]
         ]
 
         caption = (
-            f"**🎧 Title:** [{link_info['track_name']}]({link_info['track_url']})\n"
-            f"**🎤 Artist:** [{link_info['artist_name']}]({link_info['artist_url']})\n"
-            f"**💽 Album:** [{link_info['album_name']}]({link_info['album_url']})\n"
-            f"**🗓 Release Year:** {link_info['release_year']}\n"
-            f"**❗️ Is Local:** {is_local}\n"
-            f"**🌐 ISRC:** {link_info['isrc']}\n"
-            f"**🔄 Downloaded:** {await db.get_song_downloads(link_info['track_name'])} times\n\n"
-            f"**Image URL:** [Click here]({link_info['image_url']})\n"
-            f"**Track id:** {link_info['track_id']}\n"
+            f"**🎧 Название:** [{link_info['track_name']}]({link_info['track_url']})\n"
+            f"**🎤 Исполнитель:** [{link_info['artist_name']}]({link_info['artist_url']})\n"
+            f"**💽 Альбом:** [{link_info['album_name']}]({link_info['album_url']})\n"
+            f"**🗓 Год выпуска:** {link_info['release_year']}\n"
+            f"**🔄 Скачано:** {await db.get_song_downloads(link_info['track_name'])} times\n\n"
         )
 
         try:
@@ -411,11 +400,11 @@ class SpotifyDownloader:
         local_availability_message = None
         if was_local and not is_playlist:
             local_availability_message = await event.respond(
-                "This track is available locally. Preparing it for you now...")
+                "Этот трек доступен локально. Подготавливаю его для вас...")
 
         # Provide feedback to the user during the upload process
         if not is_playlist:
-            upload_status_message = await event.reply("Now uploading... Please hold on.")
+            upload_status_message = await event.reply("Теперь загружается... Пожалуйста, подождите.")
 
         try:
             # Indicate ongoing file upload to enhance user experience
@@ -428,7 +417,7 @@ class SpotifyDownloader:
         except Exception as e:
             # Handle exceptions and provide feedback
             await db.set_file_processing_flag(user_id, 0)  # Reset file processing flag
-            await event.respond(f"Unfortunately, uploading failed.\nReason: {e}") if not is_playlist else None
+            await event.respond(f"К сожалению, загрузка не удалась.\nПричина: {e}") if not is_playlist else None
             return False  # Returning False signifies the operation didn't complete successfully
 
         # Clean up feedback messages
@@ -471,8 +460,8 @@ class SpotifyDownloader:
 
         audio_attributes = DocumentAttributeAudio(
             duration=0,
-            title=f"{spotify_link_info['track_name']} - {spotify_link_info['artist_name']}",
-            performer="@Spotify_YT_Downloader_BOT",
+            title=f"{spotify_link_info['track_name']}",
+            performer=f"{spotify_link_info['artist_name']}",
             waveform=None,
             voice=False
         )
@@ -491,8 +480,6 @@ class SpotifyDownloader:
             media,
             caption=(
                     f"🎵 **{spotify_link_info['track_name']}** by **{spotify_link_info['artist_name']}**\n\n"
-                    f"▶️ [Listen on Spotify]({spotify_link_info['track_url']})\n"
-                    + (f"🎥 [Watch on YouTube]({video_url})\n" if video_url else "")
             ),
             supports_streaming=True,
             force_document=False,
@@ -874,10 +861,10 @@ class SpotifyDownloader:
         # Create a professional artist info message with more details and formatting
         message = "🎤 <b>Artists Information</b> :\n\n"
         for artist in artist_details:
-            message += f"🌟 <b>Artist Name:</b> {artist['name']}\n"
-            message += f"👥 <b>Followers:</b> {artist['followers']}\n"
-            message += f"🎵 <b>Genres:</b> {', '.join(artist['genres'])}\n"
-            message += f"📈 <b>Popularity:</b> {artist['popularity']}\n"
+            message += f"🌟 <b>Исполнитель:</b> {artist['name']}\n"
+            message += f"👥 <b>Подписчики:</b> {artist['followers']}\n"
+            message += f"🎵 <b>Жанры:</b> {', '.join(artist['genres'])}\n"
+            message += f"📈 <b>Популярность:</b> {artist['popularity']}\n"
             if artist['image_url']:
                 message += f"\n🖼️ <b>Image:</b> <a href='{artist['image_url']}'>Image Url</a>\n"
             message += f"🔗 <b>Spotify URL:</b> <a href='{artist['external_url']}'>Spotify Link</a>\n\n"
@@ -910,7 +897,7 @@ class SpotifyDownloader:
             lyrics = song.lyrics
 
             if not lyrics:
-                error_message = "Sorry, I couldn't find the lyrics for this track."
+                error_message = "Извините, текст не найден."
                 return await event.respond(error_message)
 
             # Remove 'Embed' and the first line of the lyrics
@@ -951,13 +938,13 @@ class SpotifyDownloader:
                 page_header = f"Page {i}/{len(lyrics_chunks)}\n"
                 if chunk == "``````":
                     await waiting_message.delete() if waiting_message is not None else None
-                    error_message = "Sorry, I couldn't find the lyrics for this track."
+                    error_message = "Извините, текст не найдет."
                     return await event.respond(error_message)
                 message = metadata + chunk + page_header
                 await event.respond(message, buttons=[Button.inline("Remove", data='cancel')])
         else:
             await waiting_message.delete()
-            error_message = "Sorry, I couldn't find the lyrics for this track."
+            error_message = "Извините, текст не найдет."
             return await event.respond(error_message)
 
     @staticmethod
@@ -967,7 +954,7 @@ class SpotifyDownloader:
             image_url = "https://i.scdn.co/image/" + query_data.split("/")[-1][:-1]
             await event.respond(file=image_url)
         except Exception:
-            await event.reply("An error occurred while processing your request. Please try again later.")
+            await event.reply("Произошла ошибка, повторите позже.")
 
     @staticmethod
     async def get_playlist_tracks(playlist_id, limit: int = 10, get_all: bool = False):
